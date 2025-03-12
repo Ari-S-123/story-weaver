@@ -1,6 +1,6 @@
 # StoryWeaver
 
-MixSmart is a new cocktail recipe platform that combines advanced AI-powered generation tools with social sharing features, giving users a creative yet controlled environment to craft, discover, and personalize their favorite drinks. Catering to cocktail enthusiasts (age 21 or above) who value customization and community, MixSmart places each user at the center of their experience. By weaving AI innovation and social discovery into a curated experience, MixSmart empowers cocktail lovers to create, refine, and share recipes in a platform that balances creativity with control—making it the ideal digital companion for everyone from casual sippers to dedicated mixologists.
+StoryWeaver is a pioneering collaborative fiction platform that harnesses real-time multi-user editing, AI-powered narrative generation, and interactive story-branching. Designed for writers who thrive on collaboration and readers seeking immersive storytelling, StoryWeaver seamlessly blends community creativity with structured authorial control. Empowering users with intuitive co-authoring tools, AI-driven creative assistance, and reader-influenced story evolution, StoryWeaver provides a vibrant and dynamic environment for crafting, exploring, and personalizing narratives, making it the ultimate destination for casual and dedicated storytellers alike.
 
 ## Setup
 
@@ -18,11 +18,11 @@ To create a production version of the app:
 
 1. Run `pnpm build` to create an optimized production build of the app.
 
-2. You can preview the production build with `pnpm start` and open the app in a new browser tab.
+2. You can preview the production build with `pnpm start` and click the localhost link in the console to open the app in a new browser tab.
 
 ## Developing
 
-1. Run `pnpm dev` to start the development server and open the app in a new browser tab.
+1. Run `pnpm dev` to start the development server and click the localhost link in the console to open the app in a new browser tab.
 
 ## Linting
 
