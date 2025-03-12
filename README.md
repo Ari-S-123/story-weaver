@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StoryWeaver
 
-## Getting Started
+MixSmart is a new cocktail recipe platform that combines advanced AI-powered generation tools with social sharing features, giving users a creative yet controlled environment to craft, discover, and personalize their favorite drinks. Catering to cocktail enthusiasts (age 21 or above) who value customization and community, MixSmart places each user at the center of their experience. By weaving AI innovation and social discovery into a curated experience, MixSmart empowers cocktail lovers to create, refine, and share recipes in a platform that balances creativity with control—making it the ideal digital companion for everyone from casual sippers to dedicated mixologists.
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone the repository.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Make sure you are using the latest Node LTS version at the time of the last commit [v22.x].
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run `npm i -g pnpm@latest-10` to install pnpm.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run `pnpm i` to install the dependencies.
 
-## Learn More
+## Building
 
-To learn more about Next.js, take a look at the following resources:
+To create a production version of the app:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Run `pnpm build` to create an optimized production build of the app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. You can preview the production build with `pnpm start` and open the app in a new browser tab.
 
-## Deploy on Vercel
+## Developing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Run `pnpm dev` to start the development server and open the app in a new browser tab.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Linting
+
+1. Run `pnpm lint` to run prettier and eslint.
+
+2. Run `pnpm format` to format with prettier.
