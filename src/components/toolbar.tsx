@@ -12,10 +12,7 @@ import {
 } from "lucide-react";
 import ToolbarButton from "./toolbar-button";
 import useEditorStore from "@/store/use-editor-store";
-import { Button } from "./ui/button";
-import axios from "axios";
-import { toast } from "sonner";
-import { redirect } from "next/navigation";
+
 type ToolbarSection = {
   label: string;
   icon: LucideIcon;
@@ -23,27 +20,10 @@ type ToolbarSection = {
   onClick: () => void;
 };
 
-type ToolbarProps = {
-  storyId: string;
-};
-
-export default function Toolbar({ storyId }: ToolbarProps) {
-  async function onStoryDelete() {
-    try {
-      await axios.delete(`/api/story/${storyId}`);
-      toast.success("Story deleted successfully.");
-    } catch (error) {
-      toast.error(`Error: ${error}`);
-    }
-  }
+export default function Toolbar() {
   const { editor } = useEditorStore();
   const sections: ToolbarSection[][] = [
     [
-      {
-        label: "Delete",
-        icon: Trash,
-        onClick: onStoryDelete
-      },
       {
         label: "Undo",
         icon: Undo2Icon,

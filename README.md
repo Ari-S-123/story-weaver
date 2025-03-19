@@ -8,6 +8,7 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 - Make title editable
 - Implement live collaboration with LiveBlocks
 - Implement AI features
+- Add search functionality
 - Implement notifications
 - Implement social features
 - Improve CSS
@@ -17,13 +18,13 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 
 1. Clone the repository.
 
-2. Make sure you set up Prisma, NeonDB Postgres, and Clerk.
+2. Make sure you are using the latest Node LTS version at the time of the last commit [v22.x].
 
-3. Make sure you are using the latest Node LTS version at the time of the last commit [v22.x].
+3. Run `npm i -g pnpm@latest-10` to install pnpm.
 
-4. Run `npm i -g pnpm@latest-10` to install pnpm.
-
-5. Run `pnpm i` to install the dependencies.
+4. Run `pnpm i` to install the dependencies.
+5. If you want to use your own DB and Auth, set up Clerk and NeonDB.
+6. Run `pnpx prisma generate` to install pnpm.
 
 ## Building
 

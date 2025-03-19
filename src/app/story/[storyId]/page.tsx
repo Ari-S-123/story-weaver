@@ -14,12 +14,16 @@ export default async function StoryPage({ params }: StoryPageProps) {
     where: { id: storyId }
   });
 
+  if (!story) {
+    return <div>Story not found</div>;
+  }
+
   // TODO: Make title editable, implement PUT request
   return (
     <div className="mt-6">
       <h3 className="text-center text-2xl font-bold">{story?.title}</h3>
-      <Toolbar storyId={storyId} />
-      <Editor />
+      <Toolbar />
+      <Editor story={story} />
     </div>
   );
 }
