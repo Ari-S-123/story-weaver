@@ -1,17 +1,15 @@
-"use client";
-
 import { Button } from "./ui/button";
-import { toast } from "sonner";
+import { SignInButton } from "@clerk/nextjs";
+
+// TODO: Make this look better
 export default function LandingPage() {
-  // Center the whole div in the middle of the screen
   return (
-    <div className="flex h-screen flex-col gap-4 items-center justify-center">
-      <Button variant="outline" onClick={() => toast.success("Successfully logged in")}>
-        Log In
-      </Button>
-      <Button variant="outline" onClick={() => toast.success("Successfully signed up")}>
-        Sign Up
-      </Button>
+    <div>
+      <h1>Welcome to StoryWeaver</h1>
+      <p>The greatest place to write your next story.</p>
+      <SignInButton>
+        <Button variant="outline">Get Started</Button>
+      </SignInButton>
     </div>
   );
 }
