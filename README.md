@@ -6,10 +6,11 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 
 - [x] Implement live autosaving
 - [x] Make title editable
+- [x] Add search functionality
 - [x] Implement live collaboration with LiveBlocks
-- [ ] Implement AI features
-- [ ] Add search functionality
+- [ ] Implement permissions system
 - [ ] Implement notifications
+- [ ] Implement AI features
 - [ ] Implement social features
 - [ ] Update Documentation
 
