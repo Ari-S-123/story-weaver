@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { useSearchParam } from "@/hooks/use-search-param";
 import { Story } from "@/lib/types/story";
 import StoryCard from "./story-card";
+import { toast } from "sonner";
 
 type PaginationMeta = {
   total: number;
@@ -40,7 +41,7 @@ export default function Stories() {
         setStories(response.data.stories);
         setMeta(response.data.meta);
       } catch (error) {
-        console.error("Failed to fetch stories:", error);
+        toast.error("Failed to fetch stories. Error: " + error);
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +69,6 @@ export default function Stories() {
 
   // Refresh data when triggered by a StoryCard
   const refreshData = useCallback(() => {
-    console.log("Refreshing stories data");
     fetchStories(meta.page, meta.limit);
   }, [fetchStories, meta.page, meta.limit]);
 

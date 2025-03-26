@@ -14,6 +14,7 @@ import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import Threads from "@/app/story/[storyId]/threads";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
+import AIDrawer from "./ai-drawer";
 
 type EditorProps = {
   story: Story;
@@ -96,8 +97,7 @@ export default function Editor({ story, initialHasWriteAccess = false }: EditorP
         const response = await axios.get(`/api/story/${story.id}/permissions`);
         setHasWriteAccess(response.data.hasWriteAccess);
       } catch (error) {
-        console.error("Failed to check permissions:", error);
-        toast.error("Failed to check story permissions");
+        toast.error("Failed to check story permissions. Error: " + error);
       } finally {
         setIsCheckingPermissions(false);
       }
@@ -261,6 +261,9 @@ export default function Editor({ story, initialHasWriteAccess = false }: EditorP
             You are viewing this story in read-only mode
           </div>
         )}
+        <div className="flex w-full max-w-2xl justify-center">
+          <AIDrawer context={editor?.getText()} />
+        </div>
         <Input
           value={title}
           onChange={handleTitleChange}

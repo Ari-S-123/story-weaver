@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { Story } from "@/lib/types/story";
 import { useSearchParam } from "@/hooks/use-search-param";
 import StoryCard from "./story-card";
+import { toast } from "sonner";
 
 type PaginationMeta = {
   total: number;
@@ -40,7 +41,7 @@ export default function Feed() {
         setStories(response.data.stories);
         setMeta(response.data.meta);
       } catch (error) {
-        console.error("Failed to fetch public stories:", error);
+        toast.error("Failed to fetch public stories. Error: " + error);
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +69,6 @@ export default function Feed() {
 
   // Refresh data when triggered by a StoryCard
   const refreshData = useCallback(() => {
-    console.log("Refreshing feed data");
     fetchPublicStories(meta.page, meta.limit);
   }, [fetchPublicStories, meta.page, meta.limit]);
 

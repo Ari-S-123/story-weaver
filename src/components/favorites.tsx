@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { useSearchParam } from "@/hooks/use-search-param";
 import { Story } from "@/lib/types/story";
 import StoryCard from "./story-card";
+import { toast } from "sonner";
 
 type PaginationMeta = {
   total: number;
@@ -40,7 +41,7 @@ export default function Favorites() {
         setStories(response.data.stories);
         setMeta(response.data.meta);
       } catch (error) {
-        console.error("Failed to fetch favorites:", error);
+        toast.error("Failed to fetch favorites. Error: " + error);
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +69,6 @@ export default function Favorites() {
 
   // Refresh data when triggered by a StoryCard - use forceUpdate approach
   const refreshData = useCallback(() => {
-    console.log("Refreshing favorites data");
     fetchFavorites(meta.page, meta.limit);
   }, [fetchFavorites, meta.page, meta.limit]);
 

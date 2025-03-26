@@ -9,6 +9,7 @@ import { Story } from "@/lib/types/story";
 import { useAuth, useUser, useOrganization } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 type StoryCardProps = {
   story: Story;
@@ -60,7 +61,7 @@ export default function StoryCard({ story, refreshData }: StoryCardProps) {
         setIsFavorited(favoriteResponse.data.isFavorited);
         setLikeCount(likesCountResponse.data.count);
       } catch (error) {
-        console.error("Failed to fetch like/favorite status:", error);
+        toast.error("Failed to fetch like/favorite status. Error: " + error);
       }
     };
 
@@ -92,7 +93,7 @@ export default function StoryCard({ story, refreshData }: StoryCardProps) {
         }
       }, 300);
     } catch (error) {
-      console.error("Failed to toggle like:", error);
+      toast.error("Failed to toggle like. Error: " + error);
     }
   };
 
@@ -125,7 +126,7 @@ export default function StoryCard({ story, refreshData }: StoryCardProps) {
         window.dispatchEvent(new CustomEvent("localStorageUpdated"));
       }, 300);
     } catch (error) {
-      console.error("Failed to toggle favorite:", error);
+      toast.error("Failed to toggle favorite. Error: " + error);
     }
   };
 

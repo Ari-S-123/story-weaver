@@ -58,7 +58,7 @@ export default function Toolbar({ ownerId }: ToolbarProps) {
         const response = await axios.get(`/api/story/${storyId}`);
         setIsPublic(response.data.visibility === "public");
       } catch (error) {
-        console.error("Failed to fetch story visibility:", error);
+        toast.error("Failed to fetch story visibility. Error: " + error);
       }
     };
 
