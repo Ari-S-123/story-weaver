@@ -1,13 +1,14 @@
 "use client";
 
 import { Card, CardContent } from "./ui/card";
-import { BookText, ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
 import { useSearchParam } from "@/hooks/use-search-param";
 import { Story } from "@/lib/types/story";
+import StoryCard from "./story-card";
+
 type PaginationMeta = {
   total: number;
   page: number;
@@ -31,8 +32,10 @@ export default function Stories() {
     async (page = 1, limit = 10) => {
       try {
         setIsLoading(true);
+        // Add cache-busting timestamp
+        const timestamp = new Date().getTime();
         const response = await axios.get(
-          `/api/story?page=${page}&limit=${limit}${search ? `&search=${encodeURIComponent(search)}` : ""}`
+          `/api/story?page=${page}&limit=${limit}${search ? `&search=${encodeURIComponent(search)}` : ""}&t=${timestamp}`
         );
         setStories(response.data.stories);
         setMeta(response.data.meta);
@@ -62,6 +65,12 @@ export default function Stories() {
     if (page < 1 || page > meta.pageCount) return;
     fetchStories(page, meta.limit);
   };
+
+  // Refresh data when triggered by a StoryCard
+  const refreshData = useCallback(() => {
+    console.log("Refreshing stories data");
+    fetchStories(meta.page, meta.limit);
+  }, [fetchStories, meta.page, meta.limit]);
 
   const renderPagination = () => {
     if (meta.pageCount <= 1) return null;
@@ -114,18 +123,7 @@ export default function Stories() {
     <div className="flex flex-col">
       <div className="flex flex-wrap justify-start items-center gap-4">
         {stories.map((story) => (
-          <div key={story.id} className="flex flex-col gap-1 mb-4">
-            <Link href={`/story/${story.id}`}>
-              <Card className="w-[150px] hover:border hover:border-blue-500 hover:cursor-pointer">
-                <CardContent className="flex justify-center items-center mx-auto">
-                  <BookText size={80} />
-                </CardContent>
-              </Card>
-            </Link>
-            <footer className="text-center truncate w-[150px]" title={story.title}>
-              {story.title}
-            </footer>
-          </div>
+          <StoryCard key={story.id} story={story} refreshData={refreshData} />
         ))}
       </div>
       {renderPagination()}

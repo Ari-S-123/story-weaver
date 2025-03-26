@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import LandingPage from "./landing-page";
 import Stories from "./stories";
 import Feed from "./feed";
+import Favorites from "./favorites";
 import { Suspense } from "react";
 import { Loading } from "./loading";
 
@@ -15,6 +16,12 @@ export default async function Dashboard() {
 
   return (
     <div className="m-4">
+      <h2 className="text-2xl font-bold m-8">Your Favorites</h2>
+      <div className="mx-8 flex justify-start items-center gap-4">
+        <Suspense fallback={<Loading variant="embedded" text="Loading your favorites..." />}>
+          <Favorites key={componentKey} />
+        </Suspense>
+      </div>
       <h2 className="text-2xl font-bold m-8">Your Stories</h2>
       <div className="mx-8 flex justify-start items-center gap-4">
         <Suspense fallback={<Loading variant="embedded" text="Loading your stories..." />}>

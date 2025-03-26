@@ -72,7 +72,14 @@ export async function GET(req: Request) {
           pageCount: Math.ceil(totalStories / limit)
         }
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0"
+        }
+      }
     );
   } catch (error) {
     console.error(error);

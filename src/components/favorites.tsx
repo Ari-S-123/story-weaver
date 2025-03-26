@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
-import { Story } from "@/lib/types/story";
 import { useSearchParam } from "@/hooks/use-search-param";
+import { Story } from "@/lib/types/story";
 import StoryCard from "./story-card";
 
 type PaginationMeta = {
@@ -16,7 +16,7 @@ type PaginationMeta = {
   pageCount: number;
 };
 
-export default function Feed() {
+export default function Favorites() {
   const [stories, setStories] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState<PaginationMeta>({
@@ -27,20 +27,20 @@ export default function Feed() {
   });
   const [search] = useSearchParam("search");
 
-  // Fetch public stories data with pagination
-  const fetchPublicStories = useCallback(
+  // Fetch favorites data with pagination
+  const fetchFavorites = useCallback(
     async (page = 1, limit = 10) => {
       try {
         setIsLoading(true);
-        // Add cache-busting timestamp
+        // Add a cache-busting timestamp to avoid browser caching
         const timestamp = new Date().getTime();
         const response = await axios.get(
-          `/api/feed?page=${page}&limit=${limit}${search ? `&search=${encodeURIComponent(search)}` : ""}&t=${timestamp}`
+          `/api/favorites?page=${page}&limit=${limit}${search ? `&search=${encodeURIComponent(search)}` : ""}&t=${timestamp}`
         );
         setStories(response.data.stories);
         setMeta(response.data.meta);
       } catch (error) {
-        console.error("Failed to fetch public stories:", error);
+        console.error("Failed to fetch favorites:", error);
       } finally {
         setIsLoading(false);
       }
@@ -50,27 +50,27 @@ export default function Feed() {
 
   useEffect(() => {
     // Immediate fetch on mount
-    fetchPublicStories(meta.page, meta.limit);
+    fetchFavorites(meta.page, meta.limit);
 
     // Set up an interval to refresh stories every minute
     const intervalId = setInterval(() => {
-      fetchPublicStories(meta.page, meta.limit);
+      fetchFavorites(meta.page, meta.limit);
     }, 60000);
 
     // Clean up on component unmount
     return () => clearInterval(intervalId);
-  }, [meta.page, meta.limit, search, fetchPublicStories]);
+  }, [meta.page, meta.limit, search, fetchFavorites]);
 
   const goToPage = (page: number) => {
     if (page < 1 || page > meta.pageCount) return;
-    fetchPublicStories(page, meta.limit);
+    fetchFavorites(page, meta.limit);
   };
 
-  // Refresh data when triggered by a StoryCard
+  // Refresh data when triggered by a StoryCard - use forceUpdate approach
   const refreshData = useCallback(() => {
-    console.log("Refreshing feed data");
-    fetchPublicStories(meta.page, meta.limit);
-  }, [fetchPublicStories, meta.page, meta.limit]);
+    console.log("Refreshing favorites data");
+    fetchFavorites(meta.page, meta.limit);
+  }, [fetchFavorites, meta.page, meta.limit]);
 
   const renderPagination = () => {
     if (meta.pageCount <= 1) return null;
@@ -114,9 +114,9 @@ export default function Feed() {
 
   if (stories.length === 0) {
     if (search) {
-      return <span className="text-sm">No public stories found matching {search}.</span>;
+      return <span className="text-sm">No favorited stories found matching {search}.</span>;
     }
-    return <span className="text-sm">No public stories available.</span>;
+    return <span className="text-sm">You have not favorited any stories yet.</span>;
   }
 
   return (
