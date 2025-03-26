@@ -26,6 +26,7 @@ import {
   AlertDialogFooter
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
+import { useAuth } from "@clerk/nextjs";
 
 type ToolbarSection = {
   label: string;
@@ -34,11 +35,16 @@ type ToolbarSection = {
   onClick: () => void;
 };
 
-export default function Toolbar() {
+type ToolbarProps = {
+  ownerId: string;
+};
+
+export default function Toolbar({ ownerId }: ToolbarProps) {
   const { editor } = useEditorStore();
   const params = useParams();
   const router = useRouter();
   const storyId = params.storyId as string;
+  const { userId } = useAuth();
 
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
@@ -125,9 +131,11 @@ export default function Toolbar() {
             <ToolbarButton key={item.label} {...item} />
           ))}
         </div>
-        <div className="flex items-center">
-          <ToolbarButton icon={Trash} onClick={openDeleteAlert} label="Delete Story" variant="destructive" />
-        </div>
+        {ownerId === userId && (
+          <div className="flex items-center">
+            <ToolbarButton icon={Trash} onClick={openDeleteAlert} label="Delete Story" variant="destructive" />
+          </div>
+        )}
         {/*
       TODO: Font family and size
       */}

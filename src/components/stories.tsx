@@ -6,20 +6,8 @@ import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
-import NewStory from "./new-story";
-import { Suspense } from "react";
 import { useSearchParam } from "@/hooks/use-search-param";
-import { Loading } from "./loading";
-
-type Story = {
-  id: string;
-  title: string;
-  content: string | null;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
+import { Story } from "@/lib/types/story";
 type PaginationMeta = {
   total: number;
   page: number;
@@ -27,7 +15,7 @@ type PaginationMeta = {
   pageCount: number;
 };
 
-export default function RecentStories() {
+export default function Stories() {
   const [stories, setStories] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState<PaginationMeta>({
@@ -40,7 +28,7 @@ export default function RecentStories() {
 
   // Fetch stories data with pagination
   const fetchStories = useCallback(
-    async (page = 1, limit = 5) => {
+    async (page = 1, limit = 10) => {
       try {
         setIsLoading(true);
         const response = await axios.get(
@@ -58,6 +46,7 @@ export default function RecentStories() {
   );
 
   useEffect(() => {
+    // Immediate fetch on mount
     fetchStories(meta.page, meta.limit);
 
     // Set up an interval to refresh stories every minute
@@ -114,18 +103,16 @@ export default function RecentStories() {
     );
   }
 
+  // Add new story button
   if (stories.length === 0 && !search) {
-    return <div className="text-sm">No stories yet. Create your first one!</div>;
+    return <span className="text-sm">No stories yet. Create your first one!</span>;
   } else if (stories.length === 0) {
-    return <div className="text-sm">No stories found with this search term. Create it now!</div>;
+    return <span className="text-sm">No stories found with this search term. Create it now!</span>;
   }
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-wrap justify-start items-center gap-4">
-        <Suspense fallback={<Loading variant="embedded" text="Loading new story..." />}>
-          <NewStory />
-        </Suspense>
         {stories.map((story) => (
           <div key={story.id} className="flex flex-col gap-1 mb-4">
             <Link href={`/story/${story.id}`}>

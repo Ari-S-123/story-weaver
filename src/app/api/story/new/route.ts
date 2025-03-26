@@ -5,13 +5,14 @@ import { revalidatePath } from "next/cache";
 
 export async function POST() {
   try {
-    const { userId } = await auth();
+    const { userId, orgId } = await auth();
     if (!userId) {
       return new NextResponse("The user is not authenticated.", { status: 401 });
     }
     const createNewStory = await db.story.create({
       data: {
-        userId: userId,
+        ownerId: userId,
+        organizationId: orgId,
         title: "Untitled Story",
         content: ""
       }

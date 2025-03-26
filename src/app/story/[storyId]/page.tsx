@@ -4,9 +4,15 @@ import { Story } from "@/lib/types/story";
 import Room from "./room";
 import { Suspense } from "react";
 import { Loading } from "@/components/loading";
+import { auth } from "@clerk/nextjs/server";
+import LandingPage from "@/components/landing-page";
 
 export default async function StoryPage({ params }: { params: Promise<{ storyId: string }> }) {
   const { storyId } = await params;
+  const { userId } = await auth();
+
+  if (!userId) return <LandingPage />;
+
   const storyData = await db.story.findUnique({
     where: { id: storyId }
   });
@@ -19,7 +25,8 @@ export default async function StoryPage({ params }: { params: Promise<{ storyId:
   const story: Story = {
     ...storyData,
     title: storyData.title || undefined,
-    content: storyData.content || undefined
+    content: storyData.content || undefined,
+    organizationId: storyData.organizationId || undefined
   };
 
   return (

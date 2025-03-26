@@ -189,7 +189,7 @@ export default function Editor({ story }: EditorProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col mx-4 gap-4 justify-center items-center">
-        <Toolbar />
+        <Toolbar ownerId={story.ownerId} />
         <Input
           value={title}
           onChange={handleTitleChange}

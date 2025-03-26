@@ -14,11 +14,22 @@ export async function PUT(request: Request, { params }: { params: Promise<{ stor
 
     const { title, content } = await request.json();
 
+    // Fetch the story first to check if it belongs to an organization
+    const story = await db.story.findUnique({
+      where: { id: storyId },
+      select: { organizationId: true, ownerId: true }
+    });
+
+    if (!story) {
+      return new NextResponse("Story not found", { status: 404 });
+    }
+
+    // Prepare where clause - if story has an organizationId, only check storyId
+    // otherwise check both storyId and ownerId (original behavior)
+    const whereClause = story.organizationId ? { id: storyId } : { id: storyId, ownerId: userId };
+
     await db.story.update({
-      where: {
-        id: storyId,
-        userId: userId
-      },
+      where: whereClause,
       data: {
         title,
         content
@@ -45,7 +56,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ s
     await db.story.delete({
       where: {
         id: storyId,
-        userId: userId
+        ownerId: userId
       }
     });
 

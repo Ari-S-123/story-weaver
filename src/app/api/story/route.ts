@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 
 export async function GET(req: Request) {
   try {
-    const { userId } = await auth();
+    const { userId, orgId } = await auth();
     const url = new URL(req.url);
 
     // Parse pagination parameters from query
@@ -19,18 +19,33 @@ export async function GET(req: Request) {
       return new NextResponse("User Not Authenticated", { status: 401 });
     }
 
-    // Build the where clause with search condition
-    const whereClause: Prisma.StoryWhereInput = {
-      userId: userId,
-      ...(search
-        ? {
-            title: {
-              contains: search,
-              mode: "insensitive" as Prisma.QueryMode
+    let whereClause: Prisma.StoryWhereInput;
+
+    if (!orgId) {
+      whereClause = {
+        ownerId: userId,
+        ...(search
+          ? {
+              title: {
+                contains: search,
+                mode: "insensitive" as Prisma.QueryMode
+              }
             }
-          }
-        : {})
-    };
+          : {})
+      };
+    } else {
+      whereClause = {
+        organizationId: orgId,
+        ...(search
+          ? {
+              title: {
+                contains: search,
+                mode: "insensitive" as Prisma.QueryMode
+              }
+            }
+          : {})
+      };
+    }
 
     // Get stories with pagination and search
     const stories = await db.story.findMany({
