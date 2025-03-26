@@ -27,9 +27,5 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: build
-        env:
-          BASE_PATH: "/${{ github.event.repository.name }}"
-        run: pnpm run build
       - name: Run linting check
         run: pnpm run lint
