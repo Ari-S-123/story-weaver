@@ -2,7 +2,7 @@
 
 StoryWeaver is a pioneering collaborative fiction platform that harnesses real-time multi-user editing, AI-powered narrative generation. Designed for writers who thrive on collaboration and readers seeking immersive storytelling, StoryWeaver seamlessly blends community creativity with structured authorial control. Empowering users with intuitive co-authoring tools, AI-driven creative assistance, StoryWeaver provides a vibrant and dynamic environment for crafting, exploring, and personalizing narratives, making it the ultimate destination for casual and dedicated storytellers alike.
 
-## TODO
+## MVP TODO
 
 - [x] Implement live autosaving
 - [x] Make title editable
@@ -10,7 +10,7 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 - [x] Implement live collaboration with LiveBlocks
 - [x] Implement permissions system
 - [x] Implement visibility, like, and favorite features
-- [ ] Implement AI features
+- [x] Implement AI features
 - [ ] Update Documentation
 
 ## Features that could be implemented in the future
@@ -18,6 +18,9 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 - Notifications (have to rethink component tree for this)
 - Friends/Followers system
 - Changing story ownership
+- Markdown support for AI responses
+- AI autocomplete
+- Agentic AI inline story editing
 - Story branching
 
 ## Setup
