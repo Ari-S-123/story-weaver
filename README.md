@@ -17,7 +17,7 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 - [x] Implement visibility, like, and favorite features
 - [x] Implement AI features
 - [x] Update Documentation
-- [ ] Finish videos
+- [x] Finish videos
 
 ## Features that could be implemented in the future
 
@@ -83,11 +83,11 @@ Refer to the [FP Usage](./FP-Usage.md) document for more information on the FP p
 
 ## FP Usage Video
 
-Refer to this [video](https://youtube.com) for a walkthrough of the FP principles used in this project.
+Refer to this [video](https://youtu.be/MQ1NkBGruWE) for a walkthrough of the FP principles used in this project.
 
 ## Demo Video
 
-Refer to this [video](https://youtube.com) for a demo of the project.
+Refer to this [video](https://youtu.be/tAFyj4L_CkY) for a demo of the project.
 
 ## AI Usage
 
