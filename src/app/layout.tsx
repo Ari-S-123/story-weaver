@@ -11,6 +11,7 @@ import "@liveblocks/react-tiptap/styles.css";
 import { Suspense } from "react";
 import { Loading } from "@/components/loading";
 import { neobrutalism } from "@clerk/themes";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
                 <main>
                   <NavWrapper />
                   {children}
+                  <Analytics />
                 </main>
               </NuqsAdapter>
             </Suspense>
