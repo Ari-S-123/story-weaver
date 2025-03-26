@@ -1,18 +1,21 @@
 # StoryWeaver
 
-StoryWeaver is a pioneering collaborative fiction platform that harnesses real-time multi-user editing, AI-powered narrative generation, and interactive story-branching. Designed for writers who thrive on collaboration and readers seeking immersive storytelling, StoryWeaver seamlessly blends community creativity with structured authorial control. Empowering users with intuitive co-authoring tools, AI-driven creative assistance, and reader-influenced story evolution, StoryWeaver provides a vibrant and dynamic environment for crafting, exploring, and personalizing narratives, making it the ultimate destination for casual and dedicated storytellers alike.
+StoryWeaver is a pioneering collaborative fiction platform that harnesses real-time multi-user editing, AI-powered narrative generation. Designed for writers who thrive on collaboration and readers seeking immersive storytelling, StoryWeaver seamlessly blends community creativity with structured authorial control. Empowering users with intuitive co-authoring tools, AI-driven creative assistance, StoryWeaver provides a vibrant and dynamic environment for crafting, exploring, and personalizing narratives, making it the ultimate destination for casual and dedicated storytellers alike.
 
 ## TODO
 
-- Implement live autosaving or simple PUT request
-- Make title editable
-- Implement live collaboration with LiveBlocks
-- Implement AI features
-- Add search functionality
-- Implement notifications
-- Implement social features
-- Improve CSS
-- Update Documentation
+- [x] Implement live autosaving
+- [x] Make title editable
+- [x] Implement live collaboration with LiveBlocks
+- [ ] Implement AI features
+- [ ] Add search functionality
+- [ ] Implement notifications
+- [ ] Implement social features
+- [ ] Update Documentation
+
+## Features that could not be implemented in time
+
+- Story branching
 
 ## Setup
 
@@ -23,8 +26,12 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 3. Run `npm i -g pnpm@latest-10` to install pnpm.
 
 4. Run `pnpm i` to install the dependencies.
-5. If you want to use your own DB and Auth, set up Clerk and NeonDB.
-6. Run `pnpx prisma generate` to install pnpm.
+
+5. Ignore the next step if you are a grader, please use the `.env` and `.env.local` files included on Canvas which have the development keys.
+
+6. Set up a project on Clerk, NeonDB, and Liveblocks and include all the relevant API keys in your `.env` and `.env.local`.
+
+7. Run `pnpx prisma generate` to generate the prisma client.
 
 ## Building
 

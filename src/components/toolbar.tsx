@@ -4,6 +4,7 @@ import {
   BoldIcon,
   ItalicIcon,
   LucideIcon,
+  MessageSquarePlusIcon,
   PrinterIcon,
   Redo2Icon,
   Trash,
@@ -12,6 +13,19 @@ import {
 } from "lucide-react";
 import ToolbarButton from "./toolbar-button";
 import useEditorStore from "@/store/use-editor-store";
+import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "sonner";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter
+} from "./ui/alert-dialog";
+import { Button } from "./ui/button";
 
 type ToolbarSection = {
   label: string;
@@ -22,6 +36,26 @@ type ToolbarSection = {
 
 export default function Toolbar() {
   const { editor } = useEditorStore();
+  const params = useParams();
+  const router = useRouter();
+  const storyId = params.storyId as string;
+
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+
+  async function onStoryDelete() {
+    try {
+      await axios.delete(`/api/story/${storyId}`);
+      toast.success("Story deleted successfully.");
+      router.push("/");
+    } catch (error) {
+      toast.error(`Error: ${error}`);
+    }
+  }
+
+  const openDeleteAlert = () => {
+    setShowDeleteAlert(true);
+  };
+
   const sections: ToolbarSection[][] = [
     [
       {
@@ -53,17 +87,51 @@ export default function Toolbar() {
         label: "Underline",
         icon: UnderlineIcon,
         onClick: () => editor?.chain().focus().toggleUnderline().run()
+      },
+      {
+        label: "Comment",
+        icon: MessageSquarePlusIcon,
+        onClick: () => editor?.chain().focus().addPendingComment().run(),
+        isActive: editor?.isActive("liveblocksCommentMark")
       }
     ]
   ];
+
+  const alertDialog = (
+    <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+        <AlertDialogFooter>
+          <Button variant="outline" onClick={() => setShowDeleteAlert(false)}>
+            Cancel
+          </Button>
+          <Button variant="destructive" onClick={onStoryDelete}>
+            Delete
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+
   return (
-    <div className="bg-gray-100 dark:bg-neutral-900 m-4 px-2.5 py-0.5 rounded-[24px] min-h-[40px] flex items-center gap-x-0.5 overflow-x-auto">
-      {sections[0].map((item) => (
-        <ToolbarButton key={item.label} {...item} />
-      ))}
-      {/*
+    <div>
+      {alertDialog}
+      <div className="bg-gray-100 dark:bg-neutral-900 m-4 px-2.5 py-0.5 rounded-[24px] min-h-[40px] flex items-center justify-between overflow-x-auto">
+        <div className="flex items-center gap-x-0.5">
+          {sections[0].map((item) => (
+            <ToolbarButton key={item.label} {...item} />
+          ))}
+        </div>
+        <div className="flex items-center">
+          <ToolbarButton icon={Trash} onClick={openDeleteAlert} label="Delete Story" variant="destructive" />
+        </div>
+        {/*
       TODO: Font family and size
       */}
+      </div>
     </div>
   );
 }

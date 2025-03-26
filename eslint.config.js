@@ -27,13 +27,14 @@ const eslintConfig = [
       }
     },
     rules: {
-      indent: [
-        "error",
-        2,
-        {
-          SwitchCase: 1
-        }
-      ],
+      // formatting should be handled by prettier
+      // indent: [
+      //   "error",
+      //   2,
+      //   {
+      //     SwitchCase: 1
+      //   }
+      // ],
       "linebreak-style": ["error", "unix"],
       quotes: ["error", "double"],
       semi: ["error", "always"],

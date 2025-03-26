@@ -1,29 +1,34 @@
-import Editor from "@/components/editor";
+import Editor from "@/app/story/[storyId]/editor";
 import { db } from "@/utils/db";
-import Toolbar from "@/components/toolbar";
+import { Story } from "@/lib/types/story";
+import Room from "./room";
+import { Suspense } from "react";
+import { Loading } from "@/components/loading";
 
-type StoryPageProps = {
-  params: {
-    storyId: string;
-  };
-};
-
-export default async function StoryPage({ params }: StoryPageProps) {
+export default async function StoryPage({ params }: { params: Promise<{ storyId: string }> }) {
   const { storyId } = await params;
-  const story = await db.story.findUnique({
+  const storyData = await db.story.findUnique({
     where: { id: storyId }
   });
 
-  if (!story) {
+  if (!storyData) {
     return <div>Story not found</div>;
   }
 
-  // TODO: Make title editable, implement PUT request
+  // Convert null values to undefined to match the Story type
+  const story: Story = {
+    ...storyData,
+    title: storyData.title || undefined,
+    content: storyData.content || undefined
+  };
+
   return (
     <div className="mt-6">
-      <h3 className="text-center text-2xl font-bold">{story?.title}</h3>
-      <Toolbar />
-      <Editor story={story} />
+      <Suspense fallback={<Loading variant="embedded" text="Loading story..." />}>
+        <Room>
+          <Editor story={story} />
+        </Room>
+      </Suspense>
     </div>
   );
 }

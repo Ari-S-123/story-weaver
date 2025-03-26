@@ -4,7 +4,12 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
-import NavBar from "@/components/navbar";
+import NavWrapper from "@/components/nav-wrapper";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import "@liveblocks/react-ui/styles.css";
+import "@liveblocks/react-tiptap/styles.css";
+import { Suspense } from "react";
+import { Loading } from "@/components/loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,10 +32,14 @@ export default function RootLayout({
         <body className={`${geistSans.variable} antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <Toaster />
-            <main>
-              <NavBar />
-              {children}
-            </main>
+            <Suspense fallback={<Loading variant="embedded" text="Loading..." />}>
+              <NuqsAdapter>
+                <main>
+                  <NavWrapper />
+                  {children}
+                </main>
+              </NuqsAdapter>
+            </Suspense>
           </ThemeProvider>
         </body>
       </html>

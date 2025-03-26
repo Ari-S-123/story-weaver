@@ -1,5 +1,7 @@
 {
   "cSpell.words": ["sonner"],
   "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true
+  "WillLuke.nextjs.hasPrompted": true,
+  "postman.settings.dotenv-detection-notification-visibility": false,
+  "cSpell.ignoreWords": ["Nuqs", "liveblocks"]
 }
