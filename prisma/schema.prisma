@@ -21,4 +21,19 @@ model Story {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   organizationId String?
+  visibility String @default("public")
+}
+
+model Like {
+  id String @id @default(uuid())
+  storyId String
+  userId String
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id String @id @default(uuid())
+  storyId String
+  userId String
+  createdAt DateTime @default(now())
 }

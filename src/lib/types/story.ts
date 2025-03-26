@@ -6,4 +6,5 @@ export type Story = {
   createdAt: Date;
   updatedAt: Date;
   organizationId?: string;
+  visibility: "public" | "private";
 };

@@ -21,14 +21,18 @@ export async function POST(req: Request) {
       id: room
     }
   });
+
   if (!story) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return new NextResponse("Story not found", { status: 404 });
   }
 
+  // Check user permissions
   const isOwner = story.ownerId === user.id;
-  // TODO: Implement this properly with changes to the schema
-  const canEdit = isOwner || true;
-  if (!canEdit) {
+  const isMember = !!(story.organizationId && story.organizationId === sessionClaims.org_id);
+  const hasWriteAccess = isOwner || isMember;
+
+  // For private stories, only allow collaborators to access
+  if (story.visibility === "private" && !hasWriteAccess) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
@@ -38,12 +42,20 @@ export async function POST(req: Request) {
 
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name: user.fullName ?? "Anonymous",
+      name: user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
       avatar: user.imageUrl
     }
   });
 
-  session.allow(room, session.FULL_ACCESS);
+  // Grant appropriate permissions based on user's role
+  if (hasWriteAccess) {
+    // Full access for owners and organization members
+    session.allow(room, session.FULL_ACCESS);
+  } else {
+    // Read-only access for others (public stories)
+    session.allow(room, session.READ_ACCESS);
+  }
+
   const { body, status } = await session.authorize();
 
   return new Response(body, { status });

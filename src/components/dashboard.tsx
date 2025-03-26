@@ -17,12 +17,16 @@ export default async function Dashboard() {
     <div className="m-4">
       <h2 className="text-2xl font-bold m-8">Your Stories</h2>
       <div className="mx-8 flex justify-start items-center gap-4">
-        <Suspense fallback={<Loading variant="embedded" text="Loading stories..." />}>
+        <Suspense fallback={<Loading variant="embedded" text="Loading your stories..." />}>
           <Stories key={componentKey} />
         </Suspense>
       </div>
       <h2 className="text-2xl font-bold m-8">Your Feed</h2>
-      <Feed />
+      <div className="mx-8 flex justify-start items-center gap-4">
+        <Suspense fallback={<Loading variant="embedded" text="Loading your feed..." />}>
+          <Feed />
+        </Suspense>
+      </div>
     </div>
   );
 }

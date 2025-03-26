@@ -25,6 +25,7 @@ export default function NewStory() {
       router.push(`/story/${response.data.id}`);
 
       toast.success("New story created!");
+      setIsCreating(false);
     } catch (error) {
       toast.error(`Error: ${error}`);
       setIsCreating(false);

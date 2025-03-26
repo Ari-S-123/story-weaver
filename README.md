@@ -9,13 +9,14 @@ StoryWeaver is a pioneering collaborative fiction platform that harnesses real-t
 - [x] Add search functionality
 - [x] Implement live collaboration with LiveBlocks
 - [x] Implement permissions system
-- [ ] Implement notifications
+- [ ] Implement visibility, like, and favorite features
 - [ ] Implement AI features
-- [ ] Implement social features
 - [ ] Update Documentation
 
 ## Features that could be implemented in the future
 
+- Notifications (have to rethink component tree for this)
+- Friends/Followers system
 - Story branching
 
 ## Setup

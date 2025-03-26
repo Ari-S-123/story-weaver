@@ -12,8 +12,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Toolbar from "../../../components/toolbar";
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import Threads from "@/app/story/[storyId]/threads";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
+
 type EditorProps = {
   story: Story;
+  initialHasWriteAccess?: boolean;
 };
 
 /**
@@ -63,7 +67,7 @@ const getTimeAgo = (date: Date): string => {
   return seconds <= 5 ? "just now" : `${seconds} seconds ago`;
 };
 
-export default function Editor({ story }: EditorProps) {
+export default function Editor({ story, initialHasWriteAccess = false }: EditorProps) {
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [title, setTitle] = useState(story.title || "");
   const [lastSavedAt, setLastSavedAt] = useState<Date>(new Date(story.updatedAt || Date.now()));
@@ -72,12 +76,40 @@ export default function Editor({ story }: EditorProps) {
   const [initialContent, setInitialContent] = useState(story.content || "");
   const [, setHasContentChanged] = useState(false);
   const initialLoadRef = useRef(true);
+  const [hasWriteAccess, setHasWriteAccess] = useState(initialHasWriteAccess);
+  const [isCheckingPermissions, setIsCheckingPermissions] = useState(!initialHasWriteAccess);
+
   const liveblocks = useLiveblocksExtension({
     initialContent: story.content
   });
 
+  // Check if user has write access - only if not already provided by parent
+  useEffect(() => {
+    // Skip the permission check if we already have it from server
+    if (initialHasWriteAccess) {
+      setIsCheckingPermissions(false);
+      return;
+    }
+
+    const checkPermissions = async () => {
+      try {
+        const response = await axios.get(`/api/story/${story.id}/permissions`);
+        setHasWriteAccess(response.data.hasWriteAccess);
+      } catch (error) {
+        console.error("Failed to check permissions:", error);
+        toast.error("Failed to check story permissions");
+      } finally {
+        setIsCheckingPermissions(false);
+      }
+    };
+
+    checkPermissions();
+  }, [story.id, initialHasWriteAccess]);
+
   const saveContent = useCallback(
     async (content: string, newTitle?: string) => {
+      if (!hasWriteAccess) return;
+
       try {
         await axios.put(`/api/story/${story.id}`, {
           title: newTitle || title,
@@ -91,11 +123,13 @@ export default function Editor({ story }: EditorProps) {
         toast.error(`Error: ${error}`);
       }
     },
-    [story.id, title]
+    [story.id, title, hasWriteAccess]
   );
 
   const debouncedSave = useCallback(
     (content: string, newTitle?: string) => {
+      if (!hasWriteAccess) return;
+
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
@@ -104,10 +138,12 @@ export default function Editor({ story }: EditorProps) {
         saveContent(content, newTitle);
       }, 1000); // Save after 1 second of inactivity
     },
-    [saveContent]
+    [saveContent, hasWriteAccess]
   );
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!hasWriteAccess) return;
+
     const newTitle = e.target.value;
     setTitle(newTitle);
     if (editor && newTitle !== story.title) {
@@ -156,7 +192,7 @@ export default function Editor({ story }: EditorProps) {
         return;
       }
 
-      if (currentContent !== initialContent) {
+      if (currentContent !== initialContent && hasWriteAccess) {
         setHasContentChanged(true);
         debouncedSave(currentContent);
       }
@@ -176,6 +212,7 @@ export default function Editor({ story }: EditorProps) {
     onContentError({ editor }) {
       setEditor(editor);
     },
+    editable: hasWriteAccess,
     editorProps: {
       attributes: {
         style: "padding-left: 64px; padding-right: 64px;",
@@ -184,24 +221,59 @@ export default function Editor({ story }: EditorProps) {
       }
     },
     immediatelyRender: false,
-    extensions: [liveblocks, StarterKit.configure({ history: false }), Underline]
+    extensions: [
+      liveblocks,
+      StarterKit.configure({ history: false }),
+      TaskItem.configure({ nested: true }),
+      TaskList,
+      Underline
+    ]
   });
+
+  // Update editor editable state when permissions change
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(hasWriteAccess);
+    }
+  }, [editor, hasWriteAccess]);
+
+  if (isCheckingPermissions) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col mx-4 gap-4 justify-center items-center">
+          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-10 w-full max-w-2xl rounded"></div>
+          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-6 w-48 rounded"></div>
+        </div>
+        <div className="size-full px-4">
+          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 min-h-[1024px] w-[768px] mx-auto rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col mx-4 gap-4 justify-center items-center">
-        <Toolbar ownerId={story.ownerId} />
+        {hasWriteAccess ? (
+          <Toolbar ownerId={story.ownerId} />
+        ) : (
+          <div className="bg-amber-100 dark:bg-amber-800 m-4 px-4 py-2 rounded-md text-amber-800 dark:text-amber-100">
+            You are viewing this story in read-only mode
+          </div>
+        )}
         <Input
           value={title}
           onChange={handleTitleChange}
           className="text-2xl font-bold h-12 text-center max-w-2xl"
           placeholder="Enter story title"
+          readOnly={!hasWriteAccess}
         />
         <TimeAgo key={timeAgoKey} date={lastSavedAt} className="text-center text-sm italic" />
       </div>
       <div className="size-full overflow-x-auto px-4 print:p-0 print:bg-white print:overflow-visible">
         <div className="min-w-max flex justify-center w-[768px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
           <EditorContent editor={editor} />
-          <Threads editor={editor} />
+          {hasWriteAccess && <Threads editor={editor} />}
         </div>
       </div>
     </div>

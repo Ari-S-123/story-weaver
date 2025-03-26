@@ -9,14 +9,16 @@ import {
   Redo2Icon,
   Trash,
   UnderlineIcon,
-  Undo2Icon
+  Undo2Icon,
+  EyeIcon,
+  EyeOffIcon
 } from "lucide-react";
 import ToolbarButton from "./toolbar-button";
 import useEditorStore from "@/store/use-editor-store";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -47,6 +49,34 @@ export default function Toolbar({ ownerId }: ToolbarProps) {
   const { userId } = useAuth();
 
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
+
+  // Fetch current story visibility on component mount
+  useEffect(() => {
+    const fetchStoryVisibility = async () => {
+      try {
+        const response = await axios.get(`/api/story/${storyId}`);
+        setIsPublic(response.data.visibility === "public");
+      } catch (error) {
+        console.error("Failed to fetch story visibility:", error);
+      }
+    };
+
+    fetchStoryVisibility();
+  }, [storyId]);
+
+  const toggleVisibility = async () => {
+    try {
+      const newVisibility = isPublic ? "private" : "public";
+      await axios.patch(`/api/story/${storyId}/visibility`, {
+        visibility: newVisibility
+      });
+      setIsPublic(!isPublic);
+      toast.success(`Story is now ${newVisibility}`);
+    } catch (error) {
+      toast.error(`Error updating visibility: ${error}`);
+    }
+  };
 
   async function onStoryDelete() {
     try {
@@ -132,7 +162,13 @@ export default function Toolbar({ ownerId }: ToolbarProps) {
           ))}
         </div>
         {ownerId === userId && (
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-2">
+            <ToolbarButton
+              icon={isPublic ? EyeIcon : EyeOffIcon}
+              onClick={toggleVisibility}
+              label={isPublic ? "Make Private" : "Make Public"}
+              variant="default"
+            />
             <ToolbarButton icon={Trash} onClick={openDeleteAlert} label="Delete Story" variant="destructive" />
           </div>
         )}

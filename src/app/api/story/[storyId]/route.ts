@@ -3,6 +3,55 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
+export async function GET(request: Request, { params }: { params: Promise<{ storyId: string }> }) {
+  try {
+    const { storyId } = await params;
+    const { userId, orgId } = await auth();
+
+    // Fetch the story
+    const story = await db.story.findUnique({
+      where: { id: storyId }
+    });
+
+    if (!story) {
+      return new NextResponse("Story not found", { status: 404 });
+    }
+
+    // Check access permissions
+    // 1. Public stories are accessible to everyone
+    if (story.visibility === "public") {
+      return NextResponse.json(story, { status: 200 });
+    }
+
+    // 2. Private stories are only accessible to the owner or organization members
+    if (story.visibility === "private") {
+      // Not authenticated users cannot access private stories
+      if (!userId) {
+        return new NextResponse("Unauthorized: Private story access denied", { status: 403 });
+      }
+
+      // Check if user is the owner
+      if (story.ownerId === userId) {
+        return NextResponse.json(story, { status: 200 });
+      }
+
+      // Check if user belongs to the story's organization
+      if (story.organizationId && story.organizationId === orgId) {
+        return NextResponse.json(story, { status: 200 });
+      }
+
+      // User doesn't have access to this private story
+      return new NextResponse("Unauthorized: Private story access denied", { status: 403 });
+    }
+
+    // Fallback case - shouldn't normally reach here
+    return new NextResponse("Invalid story visibility setting", { status: 400 });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse("GET Error: Failed to fetch story details.", { status: 500 });
+  }
+}
+
 export async function PUT(request: Request, { params }: { params: Promise<{ storyId: string }> }) {
   try {
     const { storyId } = await params;
