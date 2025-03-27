@@ -74,6 +74,8 @@ Refer to the [Project Proposal](./StoryWeaver%20Spec%20Sheet%20-%20Aritra%20Saha
 
 ## Module Diagram
 
+Refer to the [Project Proposal](./StoryWeaver%20Spec%20Sheet%20-%20Aritra%20Saharay.pdf) document for the module diagram.
+
 ## UI Mockups (Deprecated)
 
 These are deprecated because a lot of changes had to be made in terms of what features could make it into the MVP. Please refer to the project proposal pdf for a rough visualization of the react component heirarchy of the production MVP.
