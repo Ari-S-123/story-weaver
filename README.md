@@ -33,6 +33,7 @@ Production Deployment: https://storyweaver-next.vercel.app/
 - AI autocomplete
 - Agentic AI inline story editing
 - Story branching
+- Story thumbnails
 
 ## Setup
 
