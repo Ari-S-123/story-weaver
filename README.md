@@ -23,6 +23,7 @@ Production Deployment: https://storyweaver-next.vercel.app/
 
 ## Features that could be implemented in the future
 
+- Clean up some styling, add disclaimer for mobile users
 - Notifications (have to rethink component tree for this)
 - Fix bug with comment usernames only being anonymous
 - Have some indication of story visibility without having to enter the editor
