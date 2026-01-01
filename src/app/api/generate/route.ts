@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "API key is not configured" }, { status: 500 });
     }
 
-    const model = google("gemini-2.5-flash");
+    const model = google("gemini-3-flash-preview");
 
     const { text } = await generateText({
       model,
